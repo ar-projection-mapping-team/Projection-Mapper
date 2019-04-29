@@ -21,7 +21,7 @@ def shader(preshaded_image, x):
 
     return shaded
 
-image = cv2.resize(cv2.imread('Test_Images/coffee.jpg', 0), (1000, 700))
+image = cv2.resize(cv2.imread('Test_Images/car.jpg', 0), (1000, 700))
 width = 1000
 height = 700
 edge = cv2.Canny(image, 100, 240)
