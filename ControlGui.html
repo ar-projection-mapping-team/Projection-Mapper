@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <style>
+    .title {
+  text-align: center;
+  color: white;
+}
+body{
+  background-color: #1e2526;
+   font-family: 'Comfortaa';
+}
+.mini-title{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+#main-body-div {
+  border-radius: 15px;
+  background-color: white;
+  margin: auto;
+  width: 60em;
+  padding: 20px;
+}
+#slidecontainer{
+  background-color: ;
+  margin: auto;
+  display: block;
+
+}
+button{
+  margin: 10px;
+}
+    </style>
+    <meta charset="utf-8">
+     <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+    <title>Projection Mapper</title>
+  </head>
+  <body >
+     <h1 class="title">Projection Mapper Contols</h1>
+     <div class="" id="main-body-div">
+       <p id="instructions"><p class="mini-title">This title</p>These are test instructions and filler text used for the placement of this paragraph div please ignore the actual text in this div</p>
+       <div id="slidecontainer">
+         <button type="button">Placeholder Button</button>
+         <br>
+   <input type="range" min="1" max="100" value="50" class="slider" id="img-threshold">
+         <p>Threshold Value:<span id="f"></span></p><br>
+   <input type="range" min="1" max="100" value="50" class="slider" id="img-contrast">
+         <p>Contrast Value:<span id="b"></span></p>
+               <script>
+             document.getElementById("f").innerHTML = " " + document.getElementById("img-threshold").value;
+             document.getElementById("img-threshold").oninput = function() {  document.getElementById("f").innerHTML = " " + document.getElementById("img-threshold").value; }
+
+                 document.getElementById("b").innerHTML = " " + document.getElementById("img-contrast").value;
+             document.getElementById("img-contrast").oninput = function() {  document.getElementById("b").innerHTML = " " + document.getElementById("img-contrast").value; }
+           </script>
+ </div>
+     </div>
+   </body>
+</html>
