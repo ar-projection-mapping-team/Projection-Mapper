@@ -52,9 +52,10 @@ class OutlineCalibration:
         # GENERATE A SHADED FRAME #
         #   Copy the RGB edge-detected image:
         shaded_image = self.edge_color
-        #   Iterate through each pixel belonging to a edge, and color it:
+        #   Iterate through each pixel that borders an edge and color it:
         for i in range(len(self.border_edges)):
-            shaded_image[self.border_edges[i]] = (0 + itr, 255 - itr, 0+itr)
+            shaded_image[self.border_edges[i]] = (0 + itr, 255 - itr, 0 + itr)
+        #   Iterate through each pixel belonging to an edge and color it:
         for i in range(len(self.edges)):
             shaded_image[self.edges[i]] = (50 + itr, 255 - itr, 50+itr)
         #   Return the shaded frame:

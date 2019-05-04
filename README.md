@@ -2,3 +2,4 @@
 Dependencies:
 - NumPy
 - OpenCV-Python
+- Flask

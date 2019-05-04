@@ -43,9 +43,9 @@ button{
        <div id="slidecontainer">
          <button type="button">Placeholder Button</button>
          <br>
-   <input type="range" min="1" max="100" value="50" class="slider" id="img-threshold">
+   <input type="range" min="1" max="500" value="250" class="slider" id="img-threshold" name="thresh_slider">
          <p>Threshold Value:<span id="f"></span></p><br>
-   <input type="range" min="1" max="100" value="50" class="slider" id="img-contrast">
+   <input type="range" min="1" max="100" value="50" class="slider" id="img-contrast" name="contrast_slider">
          <p>Contrast Value:<span id="b"></span></p>
                <script>
              document.getElementById("f").innerHTML = " " + document.getElementById("img-threshold").value;
