@@ -1,7 +1,16 @@
 from flask import Flask, render_template, request
-from CalibrationDriver import driver
+from Calibration import OutlineCalibration
+from multiprocessing import Process
+import cv2
+import numpy as np
 
 controller = Flask(__name__)
+
+
+def calibrator_driver():
+    input_image = cv2.resize(cv2.imread('Test_Images/car.jpg', 0), (1000, 700))
+    calibrator = OutlineCalibration(input_image, 1000, 700)
+    calibrator.show_outlines()
 
 
 # TODO: Create home page for GUI and some way to get to calibration screen
@@ -13,9 +22,9 @@ def hello_world():
 # Shows controls for projector
 @controller.route('/control')
 def calibrate_projection():
-    # Create a new instance of the calibrator, then start it
-    instance = driver
-    instance.start()
+
+    p = Process(target=calibrator_driver, args=())
+    p.start()
 
     # Get user values for calibration threshold and contrast values
     thresh_slider = request.form["thresh_slider"]

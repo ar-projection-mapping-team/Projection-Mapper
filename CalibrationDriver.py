@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from Calibration import OutlineCalibration
 
+
 class driver:
 
     # Load in the image, create the calibrator
