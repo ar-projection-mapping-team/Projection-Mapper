@@ -31,6 +31,8 @@ body{
 button{
   margin: 10px;
 }
+
+
     </style>
     <meta charset="utf-8">
      <link href='https://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
@@ -41,12 +43,15 @@ button{
      <div class="" id="main-body-div">
        <p id="instructions"><p class="mini-title">This title</p>These are test instructions and filler text used for the placement of this paragraph div please ignore the actual text in this div</p>
        <div id="slidecontainer">
-         <button type="button">Placeholder Button</button>
+         <button type="button" onclick="buttonReset">Placeholder Button</button>
          <br>
-   <input type="range" min="1" max="500" value="250" class="slider" id="img-threshold" name="thresh_slider">
+         <form action="{{ url_for('calibrate_projection') }}" method="post">
+   <input type="range" min="1" max="100" value="50" class="slider"  name="imgthreshold">
          <p>Threshold Value:<span id="f"></span></p><br>
-   <input type="range" min="1" max="100" value="50" class="slider" id="img-contrast" name="contrast_slider">
+   <input type="range" min="1" max="100" value="50" class="slider"  name="imgcontrast">
          <p>Contrast Value:<span id="b"></span></p>
+          <input type="submit">
+       </form>
                <script>
              document.getElementById("f").innerHTML = " " + document.getElementById("img-threshold").value;
              document.getElementById("img-threshold").oninput = function() {  document.getElementById("f").innerHTML = " " + document.getElementById("img-threshold").value; }

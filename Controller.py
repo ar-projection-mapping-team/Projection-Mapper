@@ -20,14 +20,19 @@ def hello_world():
 
 
 # Shows controls for projector
-@controller.route('/control')
+@controller.route('/control', methods=['POST', 'GET'])
 def calibrate_projection():
 
     p = Process(target=calibrator_driver, args=())
     p.start()
 
     # Get user values for calibration threshold and contrast values
-    thresh_slider = request.form["thresh_slider"]
-    contrast_slider = request.form["contrast_slider"]
+    #imgthreshold = request.form["imgthreshold"]
+    #imgcontrast= request.form["imgcontrast"]
+    imgthreshold = request.form.get('imgthreshold', None)
+    imgcontrast = request.form.get('imgcontrast', None)
+    print(imgcontrast)
+    print(imgthreshold)
+
 
     return render_template('ControlGui.html')
