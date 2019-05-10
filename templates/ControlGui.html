@@ -46,18 +46,18 @@ button{
          <button type="button" onclick="buttonReset">Placeholder Button</button>
          <br>
          <form action="{{ url_for('calibrate_projection') }}" method="post">
-   <input type="range" min="1" max="100" value="50" class="slider"  name="imgthreshold">
+   <input type="range" min="1" max="100" value="50" class="slider"  name="imgthreshold" id="imgthreshold">
          <p>Threshold Value:<span id="f"></span></p><br>
-   <input type="range" min="1" max="100" value="50" class="slider"  name="imgcontrast">
+   <input type="range" min="1" max="100" value="50" class="slider"  name="imgcontrast" id="imgcontrast">
          <p>Contrast Value:<span id="b"></span></p>
           <input type="submit">
        </form>
                <script>
-             document.getElementById("f").innerHTML = " " + document.getElementById("img-threshold").value;
-             document.getElementById("img-threshold").oninput = function() {  document.getElementById("f").innerHTML = " " + document.getElementById("img-threshold").value; }
+             document.getElementById("f").innerHTML = " " + document.getElementById("imgthreshold").value;
+             document.getElementById("imgthreshold").oninput = function() {  document.getElementById("f").innerHTML = " " + document.getElementById("imgthreshold").value; }
 
-                 document.getElementById("b").innerHTML = " " + document.getElementById("img-contrast").value;
-             document.getElementById("img-contrast").oninput = function() {  document.getElementById("b").innerHTML = " " + document.getElementById("img-contrast").value; }
+                 document.getElementById("b").innerHTML = " " + document.getElementById("imgcontrast").value;
+             document.getElementById("imgcontrast").oninput = function() {  document.getElementById("b").innerHTML = " " + document.getElementById("imgcontrast").value; }
            </script>
  </div>
      </div>
