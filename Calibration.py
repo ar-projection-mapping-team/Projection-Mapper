@@ -84,3 +84,12 @@ class OutlineCalibration:
                 itr += 4
             else:
                 itr -= 4
+
+
+
+    # Shows the object edge calibration video
+    def show_outlines2(self):
+
+        #   Displays a single shaded image frame:
+        cv2.imshow('Object Edge Calibration', self.shade_frame(100))
+        cv2.waitKey(1)
