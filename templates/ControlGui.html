@@ -46,9 +46,9 @@ button{
          <button type="button" onclick="buttonReset">Placeholder Button</button>
          <br>
          <form action="{{ url_for('calibrate_projection') }}" method="post">
-   <input type="range" min="1" max="100" value="50" class="slider"  name="imgthreshold">
+   <input type="range" min="1" max="1000" value="50" class="slider"  name="imgthreshold">
          <p>Threshold Value:<span id="f"></span></p><br>
-   <input type="range" min="1" max="100" value="50" class="slider"  name="imgcontrast">
+   <input type="range" min="1" max="1000" value="50" class="slider"  name="imgcontrast">
          <p>Contrast Value:<span id="b"></span></p>
           <input type="submit">
        </form>

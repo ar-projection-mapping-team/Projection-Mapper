@@ -4,12 +4,19 @@ from multiprocessing import Process
 import cv2
 import numpy as np
 
+imgthreshold = 50
+imgcontrast = 50
+
 controller = Flask(__name__)
 
 
-def calibrator_driver():
+def calibrator_driver(t, c):
+
+    print(t)
+    print(c)
+
     input_image = cv2.resize(cv2.imread('Test_Images/car.jpg', 0), (1000, 700))
-    calibrator = OutlineCalibration(input_image, 1000, 700)
+    calibrator = OutlineCalibration(input_image, 1000, 700, t, c)
     calibrator.show_outlines()
 
 
@@ -22,17 +29,16 @@ def hello_world():
 # Shows controls for projector
 @controller.route('/control', methods=['POST', 'GET'])
 def calibrate_projection():
+    global imgthreshold, imgcontrast
 
-    p = Process(target=calibrator_driver, args=())
-    p.start()
+    #p = Process(target=calibrator_driver, args=())
+    #p.start()
 
     # Get user values for calibration threshold and contrast values
-    #imgthreshold = request.form["imgthreshold"]
-    #imgcontrast= request.form["imgcontrast"]
-    imgthreshold = request.form.get('imgthreshold', None)
-    imgcontrast = request.form.get('imgcontrast', None)
-    print(imgcontrast)
-    print(imgthreshold)
+    imgthreshold = int(request.form.get('imgthreshold', 50))
+    imgcontrast = int(request.form.get('imgcontrast', 50))
 
+    p = Process(target=calibrator_driver, args=(imgthreshold, imgcontrast))
+    p.start()
 
     return render_template('ControlGui.html')

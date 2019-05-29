@@ -4,7 +4,7 @@ import numpy as np
 
 class OutlineCalibration:
 
-    def __init__(self, input_image, w, h):
+    def __init__(self, input_image, w, h, threshold, contrast):
 
         # INIT IMAGES #
         #   Save original image, edge-detected greyscale image, and edge-detected color image:
@@ -13,7 +13,7 @@ class OutlineCalibration:
         self.width = w
         self.height = h
         #   Call function to create the edge detected images, with the default thresholds.
-        self.create_edge_image(240)
+        self.create_edge_image(threshold)
 
     # Updates the threshold for the Canny edge detector and re-defines the image variables
     def create_edge_image(self, thresh):
