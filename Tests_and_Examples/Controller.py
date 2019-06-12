@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request
-from Calibration import OutlineCalibration
+from Tests_and_Examples.Calibration import OutlineCalibration
 from multiprocessing import Process
 import cv2
-import numpy as np
 
 imgthreshold = 50
 imgcontrast = 50

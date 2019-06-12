@@ -1,6 +1,5 @@
 import cv2
-import numpy as np
-from Calibration import OutlineCalibration
+from Tests_and_Examples.Calibration import OutlineCalibration
 
 
 class driver:
