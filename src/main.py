@@ -88,7 +88,7 @@ def update_shader(new_threshold):
     shader.create_shader(int(new_threshold))
 
 # Initialize shader (give input image and create initial shader with default threshold)
-image_path = '../Test_Images/bird.jpg'
+image_path = '../Test_Images/apple.jpg'
 shader = Shader(image_path)
 shader.create_shader(1000)
 

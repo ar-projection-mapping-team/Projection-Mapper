@@ -9,8 +9,6 @@ class Shader:
         self.source_height, self.source_width = self.source.shape[:2]
 
 
-
-
     def create_shader(self, shader_threshold):
 
         # INITIALIZE SHADER EDGE PIXEL LISTS #
