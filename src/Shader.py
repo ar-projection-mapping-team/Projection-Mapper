@@ -8,12 +8,14 @@ class Shader:
         self.source = cv2.imread(source_path, 0)
         self.source_height, self.source_width = self.source.shape[:2]
 
-        # INITIALIZE SHADER EDGE PIXEL LISTS #
-        self.edges = []
-        self.border_edges = []
+
 
 
     def create_shader(self, shader_threshold):
+
+        # INITIALIZE SHADER EDGE PIXEL LISTS #
+        self.edges = []
+        self.border_edges = []
 
         # UPDATE IMAGE #
         self.shader = cv2.Canny(self.source, 100, shader_threshold)

@@ -3,8 +3,6 @@ import cv2
 from src.Shader import Shader
 import threading
 
-image_path = '../Test_Images/bird.jpg'
-shader = Shader(image_path)
 
 # WEB GUI CODE #
 # body: Main page for program's GUI
@@ -74,31 +72,28 @@ callbacks = {
   "ChangeShader": acChangeShader,
 }
 
-
-# ATLAS INIT #
+# Atlas initialization
 def run_gui():
     Atlas.launch(callbacks)
 
-# Initialize shader thread
-def run_shader(threshold_value):
+# Shows shader window
+def show_shader_screen():
     global shader
-
-    shader.create_shader(threshold_value)
     shader.show_shader()
 
-
-shader_thread = threading.Thread(target=run_shader, args=(100,))
-gui_thread = threading.Thread(target=run_gui)
-
-shader_thread.start()
-gui_thread.start()
-
+# Updates shader
 def update_shader(new_threshold):
     global shader
-
-    print("changing shader with value " + str(new_threshold))
-
-    # TODO: Works only once and not correctly, figure out how to update the threshold value for the shader
+    print("Changing threshold value to: " + str(new_threshold))
     shader.create_shader(int(new_threshold))
 
+# Initialize shader (give input image and create initial shader with default threshold)
+image_path = '../Test_Images/bird.jpg'
+shader = Shader(image_path)
+shader.create_shader(1000)
 
+# Create separate threads for program's web GUI and shader function
+shader_thread = threading.Thread(target=show_shader_screen)
+gui_thread = threading.Thread(target=run_gui)
+shader_thread.start()
+gui_thread.start()
