@@ -39,7 +39,7 @@ class Shader:
         # (this is controlled by the 'iterator' argument).
         for i in range(self.shader_pixels.__len__()):
             current_pixel_location= self.shader_pixels[i]
-            frame[current_pixel_location] = (iterator, 100, 100)
+            frame[current_pixel_location][0] = iterator
 
         return frame
 
@@ -51,6 +51,9 @@ class Shader:
         i = 0
         m = 0
 
+        # Define flag for changing the iterator value
+        increment = True
+
         # Display frame after frame of the shader onto output window
         while True:
 
@@ -61,8 +64,14 @@ class Shader:
             cv2.imshow('Shader', current_frame)
             cv2.waitKey(1)
 
-            # If the HSV hue channel reaches 359, loop it back around to 0
+            # Update iterator flag
+            if increment and i == 179:
+                increment = False
+            if not increment and i == 0:
+                increment = True
 
-            print(i)
-            # Iterate
-            i = i + 1
+            # Update iterator value
+            if increment:
+                i += 1
+            else:
+                i -= 1
