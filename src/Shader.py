@@ -1,81 +1,83 @@
 import cv2
 
-class Shader:
+
+# DefaultShader: After identifying edges of an input image, draw the edges and iterate their color over time.
+class DefaultShader:
 
     def __init__(self, source_path):
 
-        # GET SOURCE IMAGE #
+        # Get source image, as well as its height and width
         self.source = cv2.imread(source_path, 0)
         self.source_height, self.source_width = self.source.shape[:2]
 
+        # Define shader image components:
+        # shader_image refers to the entire image created by the shader, while shader_pixels refers to only the pixels
+        # that belong to an edge of the Canny filter
+        self.shader_image = []
+        self.shader_pixels = []
 
-    def create_shader(self, shader_threshold):
+    # Creates a new shader with specified threshold, brightness and contrast values
+    # TODO: ADD FUNCTIONALITY FOR BRIGHTNESS AND CONTRAST
+    def create_shader(self, threshold, brightness, contrast):
 
-        # INITIALIZE SHADER EDGE PIXEL LISTS #
-        self.edges = []
-        self.border_edges = []
+        # Re-initialize the list of shader pixels
+        self.shader_pixels = []
 
-        # UPDATE IMAGE #
-        self.shader = cv2.Canny(self.source, 100, shader_threshold)
-        self.edge_color = cv2.cvtColor(self.shader, cv2.COLOR_GRAY2RGB)
+        # Create list of pixels (using HSV color space) for the shader
+        canny_filter = cv2.Canny(self.source, 100, threshold)
+        x = cv2.cvtColor(canny_filter, cv2.COLOR_GRAY2RGB)
+        self.shader_image = cv2.cvtColor(x, cv2.COLOR_RGB2HSV)
 
-        # CREATE EDGE PIXEL LOCATION LIST #
-        # Create list that holds locations of pixels that belong to an edge:
+        # Create list that holds locations of pixels that belong to an edge
         for i in range(self.source_height):
             for j in range(self.source_width):
-                if self.shader[i,j] == 255:
-                    self.edges.append((i,j))
-        # Create list that holds locations of pixels bordering edges:
-        for x in range(len(self.edges)):
-            (i, j) = self.edges[x]
-            if j != 0:
-                n = (i, j - 1)
-                self.border_edges.append(n)
-            if i != self.source_height - 1:
-                e = (i + 1, j)
-                self.border_edges.append(e)
-            if j != self.source_width - 1:
-                s = (i, j + 1)
-                self.border_edges.append(s)
-            if i != 0:
-                w = (i - 1, j)
-                self.border_edges.append(w)
+                if self.shader_image[i, j][2] != 0:
+                    self.shader_pixels.append((i, j))
 
+    # Generates a single frame of the shader
+    def generate_frame(self, iterator, mod):
 
-    def shade_frame(self, itr):
+        # Copy the shaded image
+        frame = self.shader_image
 
-        # GENERATE A SHADED FRAME #
-        #   Copy the RGB edge-detected image:
-        shaded_image = self.edge_color
-        #   Iterate through each pixel that borders an edge and color it:
-        for i in range(len(self.border_edges)):
-            shaded_image[self.border_edges[i]] = (0 + itr, 255 - itr, 0 + itr)
-        #   Iterate through each pixel belonging to an edge and color it:
-        for i in range(len(self.edges)):
-            shaded_image[self.edges[i]] = (50 + itr, 255 - itr, 50 + itr)
-        #   Return the shaded frame:
-        return shaded_image
+        # For each pixel actually belonging to an edge (each visible pixel only) apply the shader's effect over time
+        # (this is controlled by the 'iterator' argument).
+        for i in range(self.shader_pixels.__len__()):
+            current_pixel_location = self.shader_pixels[i]
+            frame[current_pixel_location][0] = iterator
 
+        return frame
 
+    # Shows the shader window
+    # TODO: IMPLEMENT MODIFIER FUNCTIONALITY
     def show_shader(self):
 
-        # DISPLAY THE SHADER #
-        # Initialize a iterator that will be responsible for changing colors over time:
-        itr = 0
-        # Initialize a switch that will force iterator to count down/up from a value that is invalid:
-        up = True
-        # Loop to display video:
-        while (True):
-            # Resets the iterator when it reaches a value that will generate a out-of-bounds color value:
-            if itr == 0:
-                up = True
-            elif itr == 128:
-                up = False
-            # Displays a single shaded image frame:
-            cv2.imshow('Shader', self.shade_frame(itr))
+        # Define the iterator and modifier values
+        i = 0
+        m = 0
+
+        # Define flag for changing the iterator value (when hue channel reaches the max value of 179, decrement the
+        # value rather then increment it to go back down through each hue value until 0.
+        increment = True
+
+        # Display frame after frame of the shader onto output window
+        while True:
+
+            # Create the current frame by calling the frame generator function with the iterator and modifier arguments
+            current_frame = self.generate_frame(i, m)
+
+            # Show the current frame, use waitKey to show it only for a small amount of time
+            cv2.imshow('Shader', current_frame)
             cv2.waitKey(1)
-            # Iterates the color-changer:
-            if up:
-                itr += 4
+
+            # Update iterator flag
+            if increment and i == 179:
+                increment = False
+            if not increment and i == 0:
+                increment = True
+
+            # Update iterator value
+            if increment:
+                i += 1
             else:
-                itr -= 4
+                i -= 1

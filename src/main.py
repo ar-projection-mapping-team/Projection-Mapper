@@ -1,76 +1,45 @@
 import atlastk as Atlas
-import cv2
-from src.Shader import Shader
+from src.Shader import DefaultShader
 import threading
 
 
-# WEB GUI CODE #
-# body: Main page for program's GUI
-body = """
-<style>
-  .slidecontainer {
-  width: 100%; /* Width of the outside container */
-}
+# CONSTANTS #
 
-/* The slider itself */
-.slider {
-  -webkit-appearance: none;  /* Override default CSS styles */
-  appearance: none;
-  width: 100%; /* Full-width */
-  height: 25px; /* Specified height */
-  background: #d3d3d3; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
-}
+# Default shader values for threshold, contrast and brightness
+DEFAULT_SHADER_THRESHOLD = 500
+DEFAULT_SHADER_CONTRAST = 0
+DEFAULT_SHADER_BRIGHTNESS = 0
 
-/* Mouse-over effects */
-.slider:hover {
-  opacity: 1; /* Fully shown on mouse-over */
-}
+# Path to html GUI file
+WEB_GUI = "Main.html"
 
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
-  appearance: none;
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: #4CAF50; /* Green background */
-  cursor: pointer; /* Cursor on hover */
-}
+# GUI FUNCTIONS #
 
-.slider::-moz-range-thumb {
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: #4CAF50; /* Green background */
-  cursor: pointer; /* Cursor on hover */
-}
-</style>
-<div class="slidecontainer">
-  <h1>Threshold</h1>
-  <input id="threshold_slider" type="range" min="1" max="1000" value="100" class="slider" id="myRange">
-  <button data-xdh-onevent="ChangeShader" type="button">Change Shader</button> 
-</div>
-"""
-
-
-# WEB GUI FUNCTIONS #
 # acConnect: Initializes GUI's main page
 def acConnect(this, dom, id):
-  dom.setLayout("", body)
+  dom.setLayout("", Atlas.readAsset(WEB_GUI))
 
 # acChangeShader: Will update currently running shader to use selected parameters
 def acChangeShader(this, dom, id):
     new_threshold = dom.getContent("threshold_slider")
-    update_shader(new_threshold)
+    new_contrast = dom.getContent("contrast_slider")
+    new_brightness = dom.getContent("brightness_slider")
+    update_shader(new_threshold, new_contrast, new_brightness)
+
+# acResetShader: Will reset the shader to the default values
+def acResetShader(this, dom, id):
+    update_shader(DEFAULT_SHADER_THRESHOLD, DEFAULT_SHADER_CONTRAST, DEFAULT_SHADER_BRIGHTNESS)
 
 
 # WEB GUI CALLBACKS #
 callbacks = {
   "": acConnect,  # The key is the action label for a new connection.
   "ChangeShader": acChangeShader,
+  "ResetShader": acResetShader
 }
+
+
+# PROGRAM FUNCTIONS #
 
 # Atlas initialization
 def run_gui():
@@ -82,17 +51,27 @@ def show_shader_screen():
     shader.show_shader()
 
 # Updates shader
-def update_shader(new_threshold):
+def update_shader(threshold, contrast, brightness):
     global shader
-    print("Changing threshold value to: " + str(new_threshold))
-    shader.create_shader(int(new_threshold))
 
-# Initialize shader (give input image and create initial shader with default threshold)
-image_path = '../Test_Images/apple.jpg'
-shader = Shader(image_path)
-shader.create_shader(1000)
+    # Log changes to shader
+    print("-- Updating Shader --")
+    print("  Changing threshold value to: " + str(threshold))
+    print("  Changing contrast value to: " + str(contrast))
+    print("  Changing brightness value to: " + str(brightness) + "\n")
 
-# Create separate threads for program's web GUI and shader function
+    # Update shader (create a new shader with the new parameters using the 'create_shader' function)
+    shader.create_shader(int(threshold), int(contrast), int(brightness))
+
+
+# TEST PROGRAM #
+
+# Initialize shader (give input image and create initial shader with default parameters)
+image_path = '../Tests_and_Examples/Test_Images/bird.jpg'
+shader = DefaultShader(image_path)
+shader.create_shader(DEFAULT_SHADER_THRESHOLD, DEFAULT_SHADER_CONTRAST, DEFAULT_SHADER_BRIGHTNESS)
+
+# Create and run separate threads for program's web GUI and shader function
 shader_thread = threading.Thread(target=show_shader_screen)
 gui_thread = threading.Thread(target=run_gui)
 shader_thread.start()

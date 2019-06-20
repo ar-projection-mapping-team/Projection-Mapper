@@ -1,5 +1,6 @@
 import cv2
 
+
 class Shader:
 
     def __init__(self, source_path):
@@ -20,6 +21,7 @@ class Shader:
 
         # Create list of pixels (using HSV color space) for the shader
         canny_filter = cv2.Canny(self.source, 100, threshold)
+        #canny_filter = cv2.Sobel(self.source, cv2.CV_8U, 1, 0, ksize=3)
         x = cv2.cvtColor(canny_filter, cv2.COLOR_GRAY2RGB)
         self.shader_image = cv2.cvtColor(x, cv2.COLOR_RGB2HSV)
 
@@ -38,7 +40,7 @@ class Shader:
         # For each pixel actually belonging to an edge (each visible pixel only) apply the shader's effect over time
         # (this is controlled by the 'iterator' argument).
         for i in range(self.shader_pixels.__len__()):
-            current_pixel_location= self.shader_pixels[i]
+            current_pixel_location = self.shader_pixels[i]
             frame[current_pixel_location][0] = iterator
 
         return frame
