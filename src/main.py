@@ -1,5 +1,5 @@
 import atlastk as Atlas
-from src.Shader import DefaultShader
+from Shader import DefaultShader
 import threading
 
 
