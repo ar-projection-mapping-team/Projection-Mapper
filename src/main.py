@@ -1,5 +1,5 @@
 import atlastk as Atlas
-from Shader import DefaultShader
+from Shader import DefaultShader, DepthShader
 import threading
 
 
@@ -67,9 +67,12 @@ def update_shader(threshold, contrast, brightness):
 # TEST PROGRAM #
 
 # Initialize shader (give input image and create initial shader with default parameters)
-image_path = '../Tests_and_Examples/Test_Images/bird.jpg'
-shader = DefaultShader(image_path)
-shader.create_shader(DEFAULT_SHADER_THRESHOLD, DEFAULT_SHADER_CONTRAST, DEFAULT_SHADER_BRIGHTNESS)
+image_path = '../Tests_and_Examples/Test_Images/LeMonke.png'
+# shader = DefaultShader(image_path)
+# shader.create_shader(DEFAULT_SHADER_THRESHOLD, DEFAULT_SHADER_CONTRAST, DEFAULT_SHADER_BRIGHTNESS)
+
+shader = DepthShader(image_path)
+shader.create_shader(179, 0, DEFAULT_SHADER_CONTRAST, DEFAULT_SHADER_BRIGHTNESS)
 
 # Create and run separate threads for program's web GUI and shader function
 shader_thread = threading.Thread(target=show_shader_screen)

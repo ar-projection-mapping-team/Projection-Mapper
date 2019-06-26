@@ -1,6 +1,5 @@
 import cv2
 
-
 # DefaultShader: After identifying edges of an input image, draw the edges and iterate their color over time.
 class DefaultShader:
 
@@ -81,3 +80,48 @@ class DefaultShader:
                 i += 1
             else:
                 i -= 1
+
+
+
+class DepthShader:
+
+    def  __init__ (self, source_path):
+
+        self.source = cv2.imread(source_path, 0)
+        self.source_height, self.source_width =self.source.shape[:2]
+        x = cv2.cvtColor(self.source, cv2.COLOR_GRAY2RGB)
+        self.shader_image = cv2.cvtColor(x, cv2.COLOR_RGB2HSV)
+
+    def create_shader(self, Hue_upperbounds, Hue_lowerbounds, brightness, contrast):
+
+        self.shader_pixels = []
+        Range_Original = 255
+        Range_User = Hue_upperbounds - Hue_lowerbounds
+        print (Hue_upperbounds)
+        print (Hue_lowerbounds)
+
+        def mapping (value):
+
+            # global Range_User, Range_Original, Hue_lowerbounds, Hue_upperbounds
+            New_Value = (float(value/255) * Range_User) + Hue_lowerbounds
+            return New_Value
+
+        for i in range(self.source_height):
+            for j in range(self.source_width):
+
+                Grey_Value = self.source[i,j]
+                New_Value = int(mapping(Grey_Value))
+                self.shader_image[i,j] = (New_Value, 100, 100)
+
+    def generate_frame(self):
+
+        return self.shader_image
+
+    def show_shader(self):
+
+        while True:
+
+            current_frame = self.generate_frame()
+
+            cv2.imshow('Depth_Shader', current_frame)
+            cv2.waitKey(1)
