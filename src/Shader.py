@@ -1,5 +1,6 @@
 import cv2
 
+
 # DefaultShader: After identifying edges of an input image, draw the edges and iterate their color over time.
 class DefaultShader:
 
@@ -30,7 +31,7 @@ class DefaultShader:
         # Create list that holds locations of pixels that belong to an edge
         for i in range(self.source_height):
             for j in range(self.source_width):
-                if self.shader_image[i, j][2] != 0:
+                if self.shader_image[i,j][2] != 0:
                     self.shader_pixels.append((i, j))
 
     # Generates a single frame of the shader
@@ -82,46 +83,49 @@ class DefaultShader:
                 i -= 1
 
 
-
+# DepthShader: Ranges color hue from a user's upper bound to lower bound depending on the depth of the pixel.
 class DepthShader:
 
     def  __init__ (self, source_path):
 
+        # Get source image, as well as its height and width
         self.source = cv2.imread(source_path, 0)
         self.source_height, self.source_width =self.source.shape[:2]
+
+        # shader_image refers to the entire image created by the shader, which is what will be used to update the image
         x = cv2.cvtColor(self.source, cv2.COLOR_GRAY2RGB)
         self.shader_image = cv2.cvtColor(x, cv2.COLOR_RGB2HSV)
 
-    def create_shader(self, Hue_upperbounds, Hue_lowerbounds, brightness, contrast):
+    # Creates a new shader with specified bounds, brightness and contrast values
+    # TODO: ADD FUNCTIONALITY FOR BRIGHTNESS AND CONTRAST
+    def create_shader(self, hue_upperbound, hue_lowerbound, brightness, contrast):
 
-        self.shader_pixels = []
-        Range_Original = 255
-        Range_User = Hue_upperbounds - Hue_lowerbounds
-        print (Hue_upperbounds)
-        print (Hue_lowerbounds)
+        # Get length of user's specified hue bound (amount of possible hue values to map to)
+        range_user = hue_upperbound - hue_lowerbound
 
-        def mapping (value):
+        # Maps values from the 8-bit greyscale depth map color space to the HSV color space used by the shader
+        def mapping(value):
+            return (float(value / 255) * range_user) + hue_lowerbound
 
-            # global Range_User, Range_Original, Hue_lowerbounds, Hue_upperbounds
-            New_Value = (float(value/255) * Range_User) + Hue_lowerbounds
-            return New_Value
-
+        # Map each pixel's greyscale depth value to its corresponding HSV value according to the user's bounds, do this
+        # by using the above mapping function for each pixel in the source image
         for i in range(self.source_height):
             for j in range(self.source_width):
+                self.shader_image[i,j] = (int(mapping(self.source[i,j])), 100, 100)
 
-                Grey_Value = self.source[i,j]
-                New_Value = int(mapping(Grey_Value))
-                self.shader_image[i,j] = (New_Value, 100, 100)
-
+    # Generates a single frame of the shader
     def generate_frame(self):
-
         return self.shader_image
 
+    # Shows the shader window
     def show_shader(self):
 
+        # Display frame after frame of the shader onto output window
         while True:
 
+            # Create the current frame by calling the frame generator function with the iterator and modifier arguments
             current_frame = self.generate_frame()
 
+            # Show the current frame, use waitKey to show it only for a small amount of time
             cv2.imshow('Depth_Shader', current_frame)
             cv2.waitKey(1)

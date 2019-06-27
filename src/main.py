@@ -9,6 +9,8 @@ import threading
 DEFAULT_SHADER_THRESHOLD = 500
 DEFAULT_SHADER_CONTRAST = 0
 DEFAULT_SHADER_BRIGHTNESS = 0
+DEFAULT_SHADER_HUE_LOWERBOUND = 0
+DEFAULT_SHADER_HUE_UPPERBOUND = 179
 
 # Path to html GUI file
 WEB_GUI = "Main.html"
@@ -68,11 +70,23 @@ def update_shader(threshold, contrast, brightness):
 
 # Initialize shader (give input image and create initial shader with default parameters)
 image_path = '../Tests_and_Examples/Test_Images/LeMonke.png'
-# shader = DefaultShader(image_path)
-# shader.create_shader(DEFAULT_SHADER_THRESHOLD, DEFAULT_SHADER_CONTRAST, DEFAULT_SHADER_BRIGHTNESS)
 
+# Creates a default shader with default values
+# shader = DefaultShader(image_path)
+# shader.create_shader(
+#     DEFAULT_SHADER_THRESHOLD,
+#     DEFAULT_SHADER_CONTRAST,
+#     DEFAULT_SHADER_BRIGHTNESS
+# )
+
+# Creates a depth shader with default values
 shader = DepthShader(image_path)
-shader.create_shader(179, 0, DEFAULT_SHADER_CONTRAST, DEFAULT_SHADER_BRIGHTNESS)
+shader.create_shader(
+    DEFAULT_SHADER_HUE_UPPERBOUND,
+    DEFAULT_SHADER_HUE_LOWERBOUND,
+    DEFAULT_SHADER_CONTRAST,
+    DEFAULT_SHADER_BRIGHTNESS
+)
 
 # Create and run separate threads for program's web GUI and shader function
 shader_thread = threading.Thread(target=show_shader_screen)
